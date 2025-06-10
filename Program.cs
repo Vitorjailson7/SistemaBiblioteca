@@ -8,6 +8,13 @@ class Program
     {
         var biblioteca = new Biblioteca();
 
+        // Cadastro inicial para teste
+        var livro = new Livro { Titulo = "O Alquimista", Autor = "Paulo Coelho", Quantidade = 3 };
+        var usuario = new Usuario { Nome = "João Silva", CPF = "123.456.789-00" };
+
+        biblioteca.CadastrarLivro(livro);
+        biblioteca.CadastrarUsuario(usuario);
+
         while (true)
         {
             Console.Clear();
@@ -20,7 +27,7 @@ class Program
             Console.WriteLine("6. Exibir Relatórios de Empréstimos");
             Console.WriteLine("0. Sair");
             Console.Write("Escolha uma opção: ");
-            
+
             string opcao = Console.ReadLine();
             Console.Clear();
 
@@ -33,11 +40,14 @@ class Program
                     Console.Write("Autor: ");
                     string autor = Console.ReadLine();
                     Console.Write("Quantidade: ");
-                    int quantidade = int.Parse(Console.ReadLine());
+                    if (!int.TryParse(Console.ReadLine(), out int quantidade))
+                    {
+                        Console.WriteLine("Quantidade inválida!");
+                        break;
+                    }
 
                     var novoLivro = new Livro { Titulo = titulo, Autor = autor, Quantidade = quantidade };
                     biblioteca.CadastrarLivro(novoLivro);
-
                     Console.WriteLine("Livro cadastrado com sucesso!");
                     break;
 
@@ -50,7 +60,6 @@ class Program
 
                     var novoUsuario = new Usuario { Nome = nome, CPF = cpf };
                     biblioteca.CadastrarUsuario(novoUsuario);
-
                     Console.WriteLine("Usuário cadastrado com sucesso!");
                     break;
 
@@ -97,7 +106,7 @@ class Program
                     Console.WriteLine("== Relatório de Empréstimos ==");
                     foreach (var e in biblioteca.ListarEmprestimos())
                     {
-                        Console.WriteLine($"Livro: {e.Livro.Titulo}, Usuário: {e.Usuario.Nome}, Data: {e.Periodo.DataEmprestimo}");
+                        Console.WriteLine($"Livro: {e.Livro.Titulo}, Usuário: {e.Usuario.Nome}, Data de Empréstimo: {e.Periodo.DataEmprestimo}");
                     }
                     break;
 
@@ -115,4 +124,5 @@ class Program
         }
     }
 }
+
 
