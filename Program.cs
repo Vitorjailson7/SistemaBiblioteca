@@ -1,128 +1,87 @@
 ﻿using System;
-using SistemaBiblioteca;
-using System.Collections.Generic;
+using BibliotecaApp.Services;
 
-class Program
+namespace BibliotecaApp
 {
-    static void Main()
+    public class Program
     {
-        var biblioteca = new Biblioteca();
-
-        // Cadastro inicial para teste
-        var livro = new Livro { Titulo = "O Alquimista", Autor = "Paulo Coelho", Quantidade = 3 };
-        var usuario = new Usuario { Nome = "João Silva", CPF = "123.456.789-00" };
-
-        biblioteca.CadastrarLivro(livro);
-        biblioteca.CadastrarUsuario(usuario);
-
-        while (true)
+        public static void Main()
         {
-            Console.Clear();
-            Console.WriteLine("====== SISTEMA BIBLIOTECA ======");
-            Console.WriteLine("1. Cadastrar Livro");
-            Console.WriteLine("2. Cadastrar Usuário");
-            Console.WriteLine("3. Registrar Empréstimo");
-            Console.WriteLine("4. Registrar Devolução");
-            Console.WriteLine("5. Listar Livros");
-            Console.WriteLine("6. Exibir Relatórios de Empréstimos");
-            Console.WriteLine("0. Sair");
-            Console.Write("Escolha uma opção: ");
+            var biblioteca = new Biblioteca();
+            bool rodando = true;
 
-            string opcao = Console.ReadLine();
-            Console.Clear();
-
-            switch (opcao)
+            while (rodando)
             {
-                case "1":
-                    Console.WriteLine("== Cadastro de Livro ==");
-                    Console.Write("Título: ");
-                    string titulo = Console.ReadLine();
-                    Console.Write("Autor: ");
-                    string autor = Console.ReadLine();
-                    Console.Write("Quantidade: ");
-                    if (!int.TryParse(Console.ReadLine(), out int quantidade))
-                    {
-                        Console.WriteLine("Quantidade inválida!");
+                Console.WriteLine("\n--- BEM-VINDO À BIBLIOTECA ---");
+                Console.WriteLine("1. Adicionar Novo Livro");
+                Console.WriteLine("2. Registrar Novo Usuário");
+                Console.WriteLine("3. Efetuar Empréstimo");
+                Console.WriteLine("4. Registrar Devolução");
+                Console.WriteLine("5. Exibir Lista de Livros");
+                Console.WriteLine("6. Relatórios de Empréstimos");
+                Console.WriteLine("0. Sair do Sistema");
+                Console.Write("Escolha: ");
+                string opcao = Console.ReadLine();
+
+                switch (opcao)
+                {
+                    case "1":
+                        Console.Write("Título: ");
+                        string titulo = Console.ReadLine();
+                        Console.Write("Autor: ");
+                        string autor = Console.ReadLine();
+                        Console.Write("ISBN: ");
+                        string isbn = Console.ReadLine();
+                        Console.Write("Quantidade: ");
+                        if (!int.TryParse(Console.ReadLine(), out int qtd))
+                        {
+                            Console.WriteLine("Quantidade inválida.");
+                            break;
+                        }
+                        biblioteca.CadastrarLivro(titulo, autor, isbn, qtd);
                         break;
-                    }
 
-                    var novoLivro = new Livro { Titulo = titulo, Autor = autor, Quantidade = quantidade };
-                    biblioteca.CadastrarLivro(novoLivro);
-                    Console.WriteLine("Livro cadastrado com sucesso!");
-                    break;
+                    case "2":
+                        Console.Write("Nome: ");
+                        string nome = Console.ReadLine();
+                        Console.Write("Matrícula: ");
+                        string matricula = Console.ReadLine();
+                        biblioteca.CadastrarUsuario(nome, matricula);
+                        break;
 
-                case "2":
-                    Console.WriteLine("== Cadastro de Usuário ==");
-                    Console.Write("Nome: ");
-                    string nome = Console.ReadLine();
-                    Console.Write("CPF: ");
-                    string cpf = Console.ReadLine();
+                    case "3":
+                        Console.Write("Matrícula do usuário: ");
+                        string matEmp = Console.ReadLine();
+                        Console.Write("ISBN do livro: ");
+                        string isbnEmp = Console.ReadLine();
+                        biblioteca.RegistrarEmprestimo(matEmp, isbnEmp);
+                        break;
 
-                    var novoUsuario = new Usuario { Nome = nome, CPF = cpf };
-                    biblioteca.CadastrarUsuario(novoUsuario);
-                    Console.WriteLine("Usuário cadastrado com sucesso!");
-                    break;
+                    case "4":
+                        Console.Write("Matrícula do usuário: ");
+                        string matDev = Console.ReadLine();
+                        Console.Write("ISBN do livro: ");
+                        string isbnDev = Console.ReadLine();
+                        biblioteca.RegistrarDevolucao(matDev, isbnDev);
+                        break;
 
-                case "3":
-                    Console.WriteLine("== Registrar Empréstimo ==");
-                    Console.Write("Título do Livro: ");
-                    string tituloEmprestimo = Console.ReadLine();
-                    Console.Write("CPF do Usuário: ");
-                    string cpfEmprestimo = Console.ReadLine();
+                    case "5":
+                        biblioteca.ListarLivros();
+                        break;
 
-                    var livroEmprestimo = biblioteca.BuscarLivroPorTitulo(tituloEmprestimo);
-                    var usuarioEmprestimo = biblioteca.BuscarUsuarioPorCPF(cpfEmprestimo);
+                    case "6":
+                        biblioteca.ExibirRelatorios();
+                        break;
 
-                    if (livroEmprestimo != null && usuarioEmprestimo != null)
-                    {
-                        biblioteca.RegistrarEmprestimo(livroEmprestimo, usuarioEmprestimo);
-                        Console.WriteLine("Empréstimo registrado com sucesso!");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Livro ou Usuário não encontrado!");
-                    }
-                    break;
+                    case "0":
+                        rodando = false;
+                        break;
 
-                case "4":
-                    Console.WriteLine("== Registrar Devolução ==");
-                    Console.Write("Título do Livro: ");
-                    string tituloDevolucao = Console.ReadLine();
-                    Console.Write("CPF do Usuário: ");
-                    string cpfDevolucao = Console.ReadLine();
-
-                    biblioteca.RegistrarDevolucao(tituloDevolucao, cpfDevolucao);
-                    break;
-
-                case "5":
-                    Console.WriteLine("== Lista de Livros ==");
-                    foreach (var l in biblioteca.ListarLivros())
-                    {
-                        Console.WriteLine($"Título: {l.Titulo}, Autor: {l.Autor}, Quantidade: {l.Quantidade}");
-                    }
-                    break;
-
-                case "6":
-                    Console.WriteLine("== Relatório de Empréstimos ==");
-                    foreach (var e in biblioteca.ListarEmprestimos())
-                    {
-                        Console.WriteLine($"Livro: {e.Livro.Titulo}, Usuário: {e.Usuario.Nome}, Data de Empréstimo: {e.Periodo.DataEmprestimo}");
-                    }
-                    break;
-
-                case "0":
-                    Console.WriteLine("Saindo do sistema...");
-                    return;
-
-                default:
-                    Console.WriteLine("Opção inválida!");
-                    break;
+                    default:
+                        Console.WriteLine("Opção inválida.");
+                        break;
+                }
             }
-
-            Console.WriteLine("\nPressione qualquer tecla para continuar...");
-            Console.ReadKey();
         }
     }
 }
-
-

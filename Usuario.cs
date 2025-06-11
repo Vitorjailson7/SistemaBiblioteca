@@ -1,9 +1,14 @@
-namespace SistemaBiblioteca
+
+namespace BibliotecaApp.Models
 {
-    public class Usuario
+    public class Usuario : Pessoa
     {
-        public string Nome { get; set; }
-        public string CPF { get; set; }
+        public string Matricula { get; set; }
+
+        public Usuario(string nome, string matricula) : base(nome)
+        {
+            Matricula = matricula;
+        }
     }
 }
 

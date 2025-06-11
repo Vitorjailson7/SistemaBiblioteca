@@ -1,27 +1,28 @@
-namespace SistemaBiblioteca
+using System;
+
+namespace BibliotecaApp.Models
 {
     public class Emprestimo
     {
-        public Livro Livro { get; set; }
         public Usuario Usuario { get; set; }
+        public Livro Livro { get; set; }
         public PeriodoEmprestimo Periodo { get; set; }
+        public bool Finalizado => Periodo.DataDevolucao.HasValue;
 
-        public Emprestimo(Livro livro, Usuario usuario)
+        public Emprestimo(Usuario usuario, Livro livro)
         {
-            Livro = livro;
             Usuario = usuario;
-            Periodo = new PeriodoEmprestimo
-            {
-                DataEmprestimo = DateTime.Now,
-                DataDevolucao = null
-            };
+            Livro = livro;
+            Periodo = new PeriodoEmprestimo(DateTime.Now);
         }
 
-        public void RegistrarDevolucao()
+        public void Devolver()
         {
-            var periodo = Periodo;
+            var periodo = this.Periodo;
             periodo.DataDevolucao = DateTime.Now;
-            Periodo = periodo;
+            this.Periodo = periodo;
+
+            Livro.Quantidade++;
         }
     }
 }

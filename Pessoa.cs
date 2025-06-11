@@ -1,11 +1,13 @@
-namespace SistemaBiblioteca;
-
-public class Pessoa
+ 
+namespace BibliotecaApp.Models
 {
-    public string? Nome { get; set; }
-
-    public Pessoa(string? nome)
+    public class Pessoa
     {
-        Nome = nome;
+        public string Nome { get; set; }
+
+        public Pessoa(string nome)
+        {
+            Nome = nome;
+        }
     }
 }
